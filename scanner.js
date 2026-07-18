@@ -3,7 +3,7 @@
 //========================================
 
 // GANTI DENGAN URL WEB APP ANDA
-const WEB_APP = "https://script.google.com/macros/s/AKfycbzj_N0hygDN6BuNIooCQvD-s8tjWEoRvT3d3t0rzOirXONDVypso65y_eP42J5Tr1cf/exec";
+const WEB_APP = "https://script.google.com/macros/s/AKfycbxohdVdv5pcQsqU0pEIusy7eLqrnuNOhLZdJCymWKc02i4Ta8vTt9iARpsJ-kCaJnuf/exec";
 
 let html5QrCode = null;
 let scanning = false;
