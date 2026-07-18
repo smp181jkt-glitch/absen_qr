@@ -11,46 +11,26 @@
 <style>
 
 body{
-  font-family:Arial;
+  font-family: Arial, sans-serif;
   text-align:center;
-  background:#f1f1f1;
+  background:#f2f2f2;
+  margin:0;
+  padding:20px;
 }
+
 
 h2{
   color:#333;
 }
 
+
 #reader{
+
   width:320px;
   margin:auto;
+  display:none;
   background:white;
-  display:none;
-}
 
-
-button{
-
-  width:250px;
-  padding:15px;
-  margin:10px;
-  border:none;
-  border-radius:8px;
-  font-size:18px;
-  cursor:pointer;
-
-}
-
-
-#mulai{
-  background:#198754;
-  color:white;
-}
-
-
-#ulang{
-  background:#0d6efd;
-  color:white;
-  display:none;
 }
 
 
@@ -61,6 +41,40 @@ button{
   font-weight:bold;
 
 }
+
+
+
+button{
+
+  width:260px;
+  padding:15px;
+  margin:10px;
+
+  border:none;
+  border-radius:10px;
+
+  font-size:18px;
+
+}
+
+
+
+#btnScan{
+
+  background:#198754;
+  color:white;
+
+}
+
+
+#btnLanjut{
+
+  background:#0d6efd;
+  color:white;
+  display:none;
+
+}
+
 
 </style>
 
@@ -79,17 +93,17 @@ ABSENSI QR SISWA 4A
 
 
 <div id="hasil">
-Tekan tombol scan
+Silakan tekan tombol scan
 </div>
 
 
 
-<button id="mulai" onclick="mulaiScan()">
+<button id="btnScan" onclick="mulaiScan()">
 📷 MULAI SCAN
 </button>
 
 
-<button id="ulang" onclick="scanLagi()">
+<button id="btnLanjut" onclick="scanLanjut()">
 🔄 SCAN SELANJUTNYA
 </button>
 
@@ -98,22 +112,23 @@ Tekan tombol scan
 <script>
 
 
-//================================
-// URL WEB APP ANDA
-//================================
+//=====================================
+// GANTI DENGAN URL WEB APP ANDA
+//=====================================
 
-const API =
+
+const API = 
 "https://script.google.com/macros/s/AKfycbwwuR1XOimFnX0K2eM2OTgobhoVSo7d5SxeOMp41uXR24p4c5mCPZ4S51Y-2707t6lhZw/exec";
 
 
 
-let scanner = null;
+let scanner;
 
 
 
-//================================
+//=====================================
 // MULAI SCAN
-//================================
+//=====================================
 
 
 function mulaiScan(){
@@ -121,13 +136,15 @@ function mulaiScan(){
 
 document.getElementById("reader").style.display="block";
 
-document.getElementById("mulai").style.display="none";
 
-document.getElementById("ulang").style.display="none";
+document.getElementById("btnScan").style.display="none";
+
+
+document.getElementById("btnLanjut").style.display="none";
 
 
 document.getElementById("hasil").innerHTML =
-"Silakan arahkan QR...";
+"Arahkan kamera ke QR...";
 
 
 
@@ -137,39 +154,52 @@ scanner = new Html5Qrcode("reader");
 
 scanner.start(
 
-{facingMode:"environment"},
+{
+ facingMode:"environment"
+},
 
 
 {
+ fps:10,
+ qrbox:250
+},
 
-fps:10,
 
-qrbox:250
+function(qrCodeMessage){
+
+
+  scanner.stop()
+  .then(()=>{
+
+
+    document.getElementById("reader").style.display="none";
+
+
+    kirimAbsen(qrCodeMessage);
+
+
+  });
+
+
 
 },
 
 
-qr=>{
+function(error){
 
-
-scanner.stop();
-
-
-document.getElementById("reader").style.display="none";
-
-
-kirimAbsen(qr);
+}
 
 
 
-},
+).catch(function(err){
 
 
-error=>{}
+document.getElementById("hasil").innerHTML =
+"Kamera tidak dapat dibuka";
 
 
+});
 
-);
 
 
 }
@@ -177,12 +207,13 @@ error=>{}
 
 
 
-//================================
-// KIRIM KE SERVER
-//================================
+//=====================================
+// KIRIM KE GOOGLE SCRIPT
+//=====================================
 
 
 function kirimAbsen(id){
+
 
 
 document.getElementById("hasil").innerHTML =
@@ -198,7 +229,7 @@ API+
 )
 
 
-.then(res=>res.json())
+.then(response=>response.json())
 
 
 .then(data=>{
@@ -209,9 +240,10 @@ if(data.success){
 
 document.getElementById("hasil").innerHTML =
 
-"✅ ABSEN BERHASIL<br><br>"+
-data.nama+
-"<br>Kelas "+data.kelas;
+"✅ ABSENSI BERHASIL<br><br>"+
+"Nama : "+data.nama+
+"<br>Kelas : "+data.kelas;
+
 
 
 }else{
@@ -226,13 +258,14 @@ document.getElementById("hasil").innerHTML =
 
 
 
-document.getElementById("ulang").style.display="inline-block";
+document.getElementById("btnLanjut").style.display="inline-block";
+
 
 
 })
 
 
-.catch(()=>{
+.catch(function(){
 
 
 document.getElementById("hasil").innerHTML =
@@ -242,25 +275,23 @@ document.getElementById("hasil").innerHTML =
 });
 
 
-
 }
 
 
 
 
-//================================
-// SCAN BERIKUTNYA
-//================================
+//=====================================
+// SCAN SISWA BERIKUTNYA
+//=====================================
 
 
-function scanLagi(){
+function scanLanjut(){
 
 
 mulaiScan();
 
 
 }
-
 
 
 </script>
