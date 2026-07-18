@@ -1,4 +1,4 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwuvr_d9rv3qvzlz8cWmCzgu-U_alZZ0T1ePhjzjm5GFuvllS4gngPcs68sSpERdcK7/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwzcrnIXMmX0Z_zBS6Mxp7nguJGP9wbfo1Qe-WiodRndtN8dB102ieHpiDXosLW4rA/exec";
 
 let html5QrCode = null;
 let scanning = false;
