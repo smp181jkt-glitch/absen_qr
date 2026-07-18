@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Rekap Absensi Bulanan</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<div class="card">
+
+<h1>
+📊 Rekap Absensi Bulanan
+</h1>
+
+
+<label>
+Pilih Bulan
+</label>
+
+
+<input 
+type="month"
+id="bulan">
+
+
+<button
+class="btn-primary"
+onclick="loadRekap()">
+
+Tampilkan
+
+</button>
+
+
+<button
+class="btn-success"
+onclick="exportRekap()">
+
+📥 Export Rekap
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Nama</th>
+
+<th>Kelas</th>
+
+<th>Hadir</th>
+
+<th>Sakit</th>
+
+<th>Izin</th>
+
+</tr>
+
+
+</thead>
+
+
+<tbody id="tabelRekap">
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+<script src="rekap.js"></script>
+
+
+</body>
+
+</html>
