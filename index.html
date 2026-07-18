@@ -1,1 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Absensi QR Siswa</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1 align="center">
+📷 ABSENSI QR SISWA
+</h1>
+
+<p align="center">
+Silakan tekan tombol untuk memulai scan
+</p>
+
+<br>
+
+<div align="center">
+
+<button
+id="btnMulai"
+class="btn-success">
+
+📷 MULAI SCAN
+
+</button>
+
+<button
+id="btnLanjut"
+class="btn-primary"
+style="display:none;">
+
+🔄 SCAN SELANJUTNYA
+
+</button>
+
+</div>
+
+<br>
+
+<div id="reader"></div>
+
+<div id="hasil">
+
+Menunggu scan...
+
+</div>
+
+</div>
+
+</div>
+
+<script src="scanner.js"></script>
+
+</body>
+</html>
