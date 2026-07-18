@@ -1,129 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
 
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard Absensi Guru</title>
+<title>Dashboard Guru</title>
 
-
-<style>
-
-body{
-
-font-family:Arial;
-background:#f2f2f2;
-padding:20px;
-
-}
-
-
-h2{
-
-text-align:center;
-
-}
-
-
-.box{
-
-background:white;
-padding:15px;
-border-radius:10px;
-margin-bottom:15px;
-
-}
-
-
-button{
-
-padding:12px 20px;
-font-size:16px;
-border:none;
-border-radius:8px;
-background:#0d6efd;
-color:white;
-
-}
-
-
-table{
-
-width:100%;
-border-collapse:collapse;
-background:white;
-margin-top:15px;
-
-}
-
-
-th{
-
-background:#198754;
-color:white;
-
-}
-
-
-td,th{
-
-border:1px solid #ddd;
-padding:8px;
-text-align:center;
-
-}
-
-
-.belum{
-
-color:red;
-font-weight:bold;
-
-}
-
-
-.hadir{
-
-color:green;
-font-weight:bold;
-
-}
-
-
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
-
 <body>
 
+<div class="container">
 
-<h2>
-Dashboard Absensi Kelas 4A
-</h2>
+<div class="card">
 
+<h1>📚 Dashboard Absensi Guru</h1>
 
-
-<div class="box">
-
-<button onclick="loadData()">
-🔄 Refresh Data
-</button>
-
-
-<h3 id="ringkasan">
-Memuat...
-</h3>
-
+<p>Kelas 4A</p>
 
 </div>
 
+<div class="grid">
 
+<div class="stat">
+<h2 id="totalSiswa">0</h2>
+<p>Total Siswa</p>
+</div>
 
+<div class="stat">
+<h2 id="hadir">0</h2>
+<p>Hadir</p>
+</div>
+
+<div class="stat">
+<h2 id="izin">0</h2>
+<p>Izin</p>
+</div>
+
+<div class="stat">
+<h2 id="sakit">0</h2>
+<p>Sakit</p>
+</div>
+
+<div class="stat">
+<h2 id="belum">0</h2>
+<p>Belum Absen</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<input
+type="text"
+id="cari"
+placeholder="Cari Nama Siswa...">
+
+<button
+class="btn-primary"
+onclick="loadData()">
+
+🔄 Refresh
+
+</button>
+
+</div>
+
+<div class="card">
 
 <table>
-
 
 <thead>
 
@@ -137,137 +86,23 @@ Memuat...
 
 <th>Status</th>
 
+<th>Aksi</th>
 
 </tr>
-
 
 </thead>
 
-
-<tbody id="tabel">
+<tbody id="tbody">
 
 </tbody>
 
-
 </table>
 
+</div>
 
+</div>
 
-
-
-<script>
-
-
-//================================
-// GANTI DENGAN URL WEB APP ANDA
-//================================
-
-
-const API =
-
-"https://script.google.com/macros/s/AKfycbzJKEey4BfQGgd2SvbH7HT72kFZalnElX5NVi2s0eWFSagE1NSPbGC4n2vrDd7qdhEp/exec";
-
-
-
-
-//================================
-// AMBIL DATA
-//================================
-
-
-function loadData(){
-
-
-
-fetch(
-API+"?action=dashboard"
-)
-
-
-.then(response=>response.json())
-
-
-.then(data=>{
-
-
-let isi="";
-
-let hadir=0;
-
-
-
-data.forEach(siswa=>{
-
-
-if(siswa.status=="HADIR"){
-
-hadir++;
-
-}
-
-
-
-let warna =
-siswa.status=="HADIR"
-?
-"hadir"
-:
-"belum";
-
-
-
-isi += `
-
-
-<tr>
-
-<td>${siswa.id}</td>
-
-<td>${siswa.nama}</td>
-
-<td>${siswa.kelas}</td>
-
-<td class="${warna}">
-${siswa.status}
-</td>
-
-
-</tr>
-
-
-`;
-
-
-
-});
-
-
-
-document.getElementById("tabel").innerHTML=isi;
-
-
-
-document.getElementById("ringkasan").innerHTML=
-
-"Hadir : "
-+hadir+
-" | Belum Absen : "
-+(data.length-hadir);
-
-
-
-});
-
-
-}
-
-
-
-loadData();
-
-
-</script>
-
+<script src="dashboard.js"></script>
 
 </body>
 
