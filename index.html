@@ -1,46 +1,218 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html>
 <head>
-
-<meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Absensi QR Kelas 4A</title>
 
-<link rel="stylesheet" href="style.css">
 
 <script src="https://unpkg.com/html5-qrcode"></script>
 
+
+<style>
+
+body{
+  font-family: Arial, sans-serif;
+  text-align:center;
+  background:#f2f2f2;
+}
+
+
+h2{
+  color:#333;
+}
+
+
+#reader{
+
+  width:320px;
+  margin:auto;
+  background:white;
+
+}
+
+
+#hasil{
+
+  margin-top:20px;
+  font-size:18px;
+  font-weight:bold;
+
+}
+
+
+button{
+
+  padding:12px 20px;
+  margin-top:15px;
+  font-size:16px;
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-<h1>ABSENSI QR KELAS 4A</h1>
+<h2>
+ABSENSI QR SISWA 4A
+</h2>
+
 
 <div id="reader"></div>
 
+
 <div id="hasil">
-
-<h2>Tekan tombol MULAI SCAN</h2>
-
+Silakan scan QR
 </div>
 
-<button id="btnScan">
-📷 MULAI SCAN
-</button>
 
-<button id="btnScanLagi" style="display:none;">
-🔄 SCAN LAGI
-</button>
+<script>
 
-</div>
 
-<script src="app.js"></script>
+//====================================
+// GANTI DENGAN URL WEB APP ANDA
+//====================================
+
+
+const API =
+
+"https://script.google.com/macros/s/AKfycbwwuR1XOimFnX0K2eM2OTgobhoVSo7d5SxeOMp41uXR24p4c5mCPZ4S51Y-2707t6lhZw/exec";
+
+
+
+
+//====================================
+// START SCANNER
+//====================================
+
+
+let scanner = new Html5Qrcode("reader");
+
+
+
+function mulaiScan(){
+
+
+scanner.start(
+
+{facingMode:"environment"},
+
+
+{
+fps:10,
+
+qrbox:250
+
+},
+
+
+qrCodeMessage => {
+
+
+  // QR terbaca
+
+  scanner.stop();
+
+
+  kirimAbsen(qrCodeMessage);
+
+
+},
+
+
+errorMessage => {
+
+}
+
+
+
+).catch(err=>{
+
+
+document.getElementById("hasil").innerHTML =
+"Kamera tidak bisa dibuka";
+
+
+});
+
+
+}
+
+
+
+function kirimAbsen(id){
+
+
+
+document.getElementById("hasil").innerHTML =
+"Memproses...";
+
+
+
+fetch(
+
+API+
+"?action=scan&id="+id
+
+)
+
+
+.then(response=>response.json())
+
+
+.then(data=>{
+
+
+if(data.success){
+
+
+document.getElementById("hasil").innerHTML =
+
+"✅ "+data.message+
+"<br>"+
+data.nama+
+"<br>Kelas "+data.kelas;
+
+
+}else{
+
+
+document.getElementById("hasil").innerHTML =
+
+"❌ "+data.message;
+
+
+}
+
+
+
+})
+
+.catch(error=>{
+
+
+document.getElementById("hasil").innerHTML =
+"Server tidak terhubung";
+
+
+});
+
+
+
+}
+
+
+
+mulaiScan();
+
+
+</script>
+
 
 </body>
-
 </html>
