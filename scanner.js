@@ -89,11 +89,13 @@ async function scanBerhasil(decodedText) {
         })
         .catch(err => {
 
-            hasil.innerHTML =
-                "❌ Server tidak dapat dihubungi";
+    console.error(err);
 
-            btnLanjut.style.display = "inline-block";
+    hasil.innerHTML =
+        "❌ " + err;
 
-        });
+    btnLanjut.style.display = "inline-block";
+
+});
 
 }
