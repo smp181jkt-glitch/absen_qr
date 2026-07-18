@@ -1,4 +1,4 @@
-const WEB_APP_URL = "PASTE_URL_WEB_APP_ANDA_DI_SINI";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwuvr_d9rv3qvzlz8cWmCzgu-U_alZZ0T1ePhjzjm5GFuvllS4gngPcs68sSpERdcK7/exec";
 
 let html5QrCode = null;
 let scanning = false;
