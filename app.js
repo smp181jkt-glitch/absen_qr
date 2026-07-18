@@ -1,20 +1,39 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwuvr_d9rv3qvzlz8cWmCzgu-U_alZZ0T1ePhjzjm5GFuvllS4gngPcs68sSpERdcK7/exec";
+const WEB_APP_URL = "PASTE_URL_WEB_APP_ANDA_DI_SINI";
 
 let html5QrCode = null;
 let scanning = false;
 
 const hasil = document.getElementById("hasil");
 const btnScan = document.getElementById("btnScan");
+const btnScanLagi = document.getElementById("btnScanLagi");
 
-btnScan.onclick = () => {
+//============================
+// Tombol Mulai Scan
+//============================
 
-    if(scanning){
-        stopScanner();
-    }else{
-        startScanner();
-    }
+btnScan.addEventListener("click", () => {
 
-};
+    btnScan.style.display = "none";
+    startScanner();
+
+});
+
+//============================
+// Tombol Scan Lagi
+//============================
+
+btnScanLagi.addEventListener("click", () => {
+
+    btnScanLagi.style.display = "none";
+    hasil.innerHTML = "<h2 class='info'>Arahkan QR ke kamera...</h2>";
+
+    startScanner();
+
+});
+
+//============================
+// Mulai Kamera
+//============================
 
 function startScanner(){
 
@@ -22,15 +41,15 @@ function startScanner(){
 
     Html5Qrcode.getCameras().then(cameras=>{
 
-        if(cameras.length===0){
+        if(cameras.length==0){
 
-            hasil.innerHTML="<h2>Kamera tidak ditemukan</h2>";
+            hasil.innerHTML="<h2 class='error'>Kamera tidak ditemukan.</h2>";
+            btnScan.style.display="block";
             return;
 
         }
 
         scanning=true;
-        btnScan.innerText="Stop Scan";
 
         html5QrCode.start(
 
@@ -49,70 +68,72 @@ function startScanner(){
 
 }
 
+//============================
+// Stop Kamera
+//============================
+
 function stopScanner(){
 
-    if(!html5QrCode) return;
+    if(!html5QrCode) return Promise.resolve();
 
-    html5QrCode.stop().then(()=>{
+    return html5QrCode.stop().then(()=>{
 
+        html5QrCode.clear();
         scanning=false;
-        btnScan.innerText="Mulai Scan";
 
     });
 
 }
 
+//============================
+// QR Berhasil Dibaca
+//============================
+
 function onScanSuccess(decodedText){
 
-    stopScanner();
+    stopScanner().then(()=>{
 
-    hasil.innerHTML="<h2>Memproses...</h2>";
+        hasil.innerHTML="<h2 class='info'>Memproses...</h2>";
 
-    fetch(
-        WEB_APP_URL +
-        "?action=scan&id=" +
-        encodeURIComponent(decodedText)
-    )
+        fetch(
+            WEB_APP_URL +
+            "?action=scan&id=" +
+            encodeURIComponent(decodedText)
+        )
 
-    .then(r=>r.json())
+        .then(res=>res.json())
 
-    .then(data=>{
+        .then(data=>{
 
-        if(data.success){
+            if(data.success){
 
-            hasil.innerHTML=`
-                <h2 style="color:green;">${data.message}</h2>
-                <p><b>${data.nama}</b></p>
-                <p>${data.kelas}</p>
-                <p>${data.waktu}</p>
-            `;
+                hasil.innerHTML=`
+                    <h2 class="success">✅ ${data.message}</h2>
+                    <p><b>${data.nama}</b></p>
+                    <p>Kelas : ${data.kelas}</p>
+                    <p>Jam : ${data.waktu}</p>
+                `;
 
-        }else{
+            }else{
 
-            hasil.innerHTML=`
-                <h2 style="color:red;">${data.message}</h2>
-                <p>${data.nama||""}</p>
-            `;
+                hasil.innerHTML=`
+                    <h2 class="error">${data.message}</h2>
+                    <p>${data.nama || ""}</p>
+                `;
 
-        }
+            }
 
-        setTimeout(()=>{
+            btnScanLagi.style.display="block";
 
-            hasil.innerHTML="<h2>Siap Scan...</h2>";
-            startScanner();
+        })
 
-        },3000);
+        .catch(()=>{
 
-    })
+            hasil.innerHTML="<h2 class='error'>Server tidak dapat dihubungi.</h2>";
 
-    .catch(err=>{
+            btnScanLagi.style.display="block";
 
-        hasil.innerHTML="<h2>Server tidak dapat dihubungi</h2>";
-        console.log(err);
-
-        setTimeout(()=>{
-            startScanner();
-        },3000);
+        });
 
     });
 
