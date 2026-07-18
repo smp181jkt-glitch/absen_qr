@@ -6,47 +6,59 @@
 
 <title>Absensi QR Kelas 4A</title>
 
-
 <script src="https://unpkg.com/html5-qrcode"></script>
-
 
 <style>
 
 body{
-  font-family: Arial, sans-serif;
+  font-family:Arial;
   text-align:center;
-  background:#f2f2f2;
+  background:#f1f1f1;
 }
-
 
 h2{
   color:#333;
 }
 
-
 #reader{
-
   width:320px;
   margin:auto;
   background:white;
-
-}
-
-
-#hasil{
-
-  margin-top:20px;
-  font-size:18px;
-  font-weight:bold;
-
+  display:none;
 }
 
 
 button{
 
-  padding:12px 20px;
-  margin-top:15px;
-  font-size:16px;
+  width:250px;
+  padding:15px;
+  margin:10px;
+  border:none;
+  border-radius:8px;
+  font-size:18px;
+  cursor:pointer;
+
+}
+
+
+#mulai{
+  background:#198754;
+  color:white;
+}
+
+
+#ulang{
+  background:#0d6efd;
+  color:white;
+  display:none;
+}
+
+
+#hasil{
+
+  margin:20px;
+  font-size:18px;
+  font-weight:bold;
 
 }
 
@@ -67,35 +79,60 @@ ABSENSI QR SISWA 4A
 
 
 <div id="hasil">
-Silakan scan QR
+Tekan tombol scan
 </div>
+
+
+
+<button id="mulai" onclick="mulaiScan()">
+📷 MULAI SCAN
+</button>
+
+
+<button id="ulang" onclick="scanLagi()">
+🔄 SCAN SELANJUTNYA
+</button>
+
 
 
 <script>
 
 
-//====================================
-// GANTI DENGAN URL WEB APP ANDA
-//====================================
-
+//================================
+// URL WEB APP ANDA
+//================================
 
 const API =
-
 "https://script.google.com/macros/s/AKfycbwwuR1XOimFnX0K2eM2OTgobhoVSo7d5SxeOMp41uXR24p4c5mCPZ4S51Y-2707t6lhZw/exec";
 
 
 
-
-//====================================
-// START SCANNER
-//====================================
+let scanner = null;
 
 
-let scanner = new Html5Qrcode("reader");
 
+//================================
+// MULAI SCAN
+//================================
 
 
 function mulaiScan(){
+
+
+document.getElementById("reader").style.display="block";
+
+document.getElementById("mulai").style.display="none";
+
+document.getElementById("ulang").style.display="none";
+
+
+document.getElementById("hasil").innerHTML =
+"Silakan arahkan QR...";
+
+
+
+scanner = new Html5Qrcode("reader");
+
 
 
 scanner.start(
@@ -104,6 +141,7 @@ scanner.start(
 
 
 {
+
 fps:10,
 
 qrbox:250
@@ -111,42 +149,40 @@ qrbox:250
 },
 
 
-qrCodeMessage => {
+qr=>{
 
 
-  // QR terbaca
-
-  scanner.stop();
+scanner.stop();
 
 
-  kirimAbsen(qrCodeMessage);
+document.getElementById("reader").style.display="none";
+
+
+kirimAbsen(qr);
+
 
 
 },
 
 
-errorMessage => {
-
-}
+error=>{}
 
 
 
-).catch(err=>{
-
-
-document.getElementById("hasil").innerHTML =
-"Kamera tidak bisa dibuka";
-
-
-});
+);
 
 
 }
 
+
+
+
+//================================
+// KIRIM KE SERVER
+//================================
 
 
 function kirimAbsen(id){
-
 
 
 document.getElementById("hasil").innerHTML =
@@ -162,7 +198,7 @@ API+
 )
 
 
-.then(response=>response.json())
+.then(res=>res.json())
 
 
 .then(data=>{
@@ -173,8 +209,7 @@ if(data.success){
 
 document.getElementById("hasil").innerHTML =
 
-"✅ "+data.message+
-"<br>"+
+"✅ ABSEN BERHASIL<br><br>"+
 data.nama+
 "<br>Kelas "+data.kelas;
 
@@ -191,13 +226,17 @@ document.getElementById("hasil").innerHTML =
 
 
 
+document.getElementById("ulang").style.display="inline-block";
+
+
 })
 
-.catch(error=>{
+
+.catch(()=>{
 
 
 document.getElementById("hasil").innerHTML =
-"Server tidak terhubung";
+"❌ Server tidak terhubung";
 
 
 });
@@ -208,7 +247,20 @@ document.getElementById("hasil").innerHTML =
 
 
 
+
+//================================
+// SCAN BERIKUTNYA
+//================================
+
+
+function scanLagi(){
+
+
 mulaiScan();
+
+
+}
+
 
 
 </script>
